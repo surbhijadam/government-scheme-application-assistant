@@ -1,0 +1,19 @@
+# Virtual environment
+venv/
+
+# Secrets and local settings
+.env
+backend/.env
+frontend/.env
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Editor and OS files
+.vscode/
+.idea/
+.DS_Store
+
+# Uploaded demo documents
+uploads/
