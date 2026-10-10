@@ -10,7 +10,7 @@ import os
 import pytest
 
 os.environ["TEST_DATABASE_URI"] = "sqlite:///:memory:"
-os.environ["SECRET_KEY"] = "test-secret-key-for-pytest-only-minimum-32-bytes"
+os.environ["SECRET_KEY"] = "test-secret-key-for-pytest-only-0123456789abcdef"
 os.environ["FLASK_DEBUG"] = "False"
 
 from app import create_app  # noqa: E402  (must come after the env vars above)
