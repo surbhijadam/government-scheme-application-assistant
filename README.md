@@ -24,3 +24,4 @@ python run.py
 
 ## Status
 - [x] Phase 1: Project setup and health endpoint
+CI verification after cleanup.
