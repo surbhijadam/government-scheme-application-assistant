@@ -1,0 +1,56 @@
+services:
+  mysql:
+    image: mysql:8.4
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build: ./backend
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      # DB_HOST is "mysql" - the SERVICE NAME above, not 127.0.0.1. Docker's
+      # internal DNS resolves service names to the right container's IP;
+      # 127.0.0.1 inside the backend container would mean "this container
+      # itself", which has no MySQL server running in it.
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_USER: ${MYSQL_USER}
+      DB_PASSWORD: ${MYSQL_PASSWORD}
+      DB_NAME: ${MYSQL_DATABASE}
+      SECRET_KEY: ${SECRET_KEY}
+      GROQ_API_KEY: ${GROQ_API_KEY}
+      FLASK_DEBUG: ${FLASK_DEBUG}
+    ports:
+      - "5000:5000"
+    volumes:
+      - backend_uploads:/app/uploads
+
+  frontend:
+    build: ./frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    environment:
+      # Same service-name reasoning as DB_HOST above: Streamlit reaches
+      # Flask via the service name "backend", not 127.0.0.1.
+      API_BASE_URL: http://backend:5000/api
+    ports:
+      - "8501:8501"
+
+volumes:
+  mysql_data:
+  backend_uploads:

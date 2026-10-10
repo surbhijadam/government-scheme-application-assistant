@@ -17,3 +17,6 @@ __pycache__/
 
 # Uploaded demo documents
 uploads/
+
+# Docker Compose secrets
+.env.docker

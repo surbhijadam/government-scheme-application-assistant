@@ -36,6 +36,19 @@ def check_eligibility_route():
     }
 
     scheme_rules = list(getattr(scheme, "eligibility_rules", []) or [])
+    if not scheme_rules:
+        return jsonify({
+            "scheme_id": scheme.scheme_id,
+            "scheme_name": scheme.name,
+            "eligible": None,
+            "message": (
+                "Eligibility criteria have not been configured "
+                "for this scheme yet."
+            ),
+            "matched_rules": [],
+            "failed_rules": [],
+        }), 200
+
     rules = [
         {
             "field_name": rule.field_name,

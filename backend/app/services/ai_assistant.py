@@ -13,7 +13,7 @@ import os
 
 from groq import Groq
 
-GROQ_MODEL = "llama-3.1-8b-instant"
+GROQ_MODEL = "openai/gpt-oss-20b"
 
 SYSTEM_PROMPT = """You are an assistant for a government scheme application demo project.
 
